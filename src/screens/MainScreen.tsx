@@ -12,7 +12,6 @@ import {useUnit} from 'effector-react';
 import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import Animated from 'react-native-reanimated';
 import {curatedPhotosStore, fetchCuratedImagesFx, resetPhotos} from '../stores';
 import {Photo} from '../types';
 
@@ -25,6 +24,7 @@ import {RouteParams} from '../Navigation';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const PADDING = 4;
+const PADDING_BOTTOM = 8;
 const LIST_PADDING = 16;
 const ITEM_WIDTH = Math.floor(
   (DEVICE_WIDTH - LIST_PADDING * 2) / 3 - PADDING * 2,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     margin: PADDING,
-    marginBottom: 8,
+    marginBottom: PADDING_BOTTOM,
   },
   imageContainer: {
     shadowRadius: 4,
@@ -99,16 +99,18 @@ function MainScreen(): React.JSX.Element {
           onPress={() => {
             navigate('Details', {id: item.id});
           }}>
-          <View style={styles.imageContainer}>
-            <FastImage
-              source={{uri: item.src.medium}}
-              resizeMode={FastImage.resizeMode.cover}
-              style={styles.image}
-            />
+          <View shouldRasterizeIOS>
+            <View style={styles.imageContainer}>
+              <FastImage
+                source={{uri: item.src.medium}}
+                resizeMode={FastImage.resizeMode.cover}
+                style={styles.image}
+              />
+            </View>
+            <Text numberOfLines={1} style={styles.itemTitle}>
+              {item.photographer}
+            </Text>
           </View>
-          <Text numberOfLines={1} style={styles.itemTitle}>
-            {item.photographer}
-          </Text>
         </TouchableOpacity>
       );
     },
@@ -117,7 +119,6 @@ function MainScreen(): React.JSX.Element {
 
   const handleRefresh = useCallback(() => {
     resetPhotos();
-    // fetchCuratedImagesFx({page: 3});
   }, []);
 
   const handleEndReached = useCallback(() => {
@@ -140,6 +141,11 @@ function MainScreen(): React.JSX.Element {
       renderItem={renderItem}
       keyExtractor={item => String(item.id)}
       onRefresh={handleRefresh}
+      getItemLayout={(_, index) => ({
+        length: ITEM_WIDTH,
+        offset: (ITEM_WIDTH + (PADDING + PADDING_BOTTOM)) * index,
+        index,
+      })}
       refreshing={isLoading}
       onEndReached={handleEndReached}
       onEndReachedThreshold={0.01}
