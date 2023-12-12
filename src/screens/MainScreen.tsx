@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: LIST_PADDING,
   },
   itemContainer: {
-    margin: PADDING,
-    marginBottom: PADDING_BOTTOM,
+    padding: PADDING,
+    paddingBottom: PADDING_BOTTOM,
   },
   imageContainer: {
     shadowRadius: 4,
@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
   },
   itemTitle: {
+    height: 16,
+    lineHeight: 16,
     fontSize: 12,
     width: ITEM_WIDTH,
     fontWeight: '500',
@@ -142,8 +144,8 @@ function MainScreen(): React.JSX.Element {
       keyExtractor={item => String(item.id)}
       onRefresh={handleRefresh}
       getItemLayout={(_, index) => ({
-        length: ITEM_WIDTH,
-        offset: (ITEM_WIDTH + (PADDING + PADDING_BOTTOM)) * index,
+        length: ITEM_WIDTH + (PADDING + PADDING_BOTTOM) + 22,
+        offset: (ITEM_WIDTH + PADDING + PADDING_BOTTOM + 22) * index,
         index,
       })}
       refreshing={isLoading}
