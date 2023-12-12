@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, StyleSheet, ActivityIndicator, Dimensions} from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 
 import {useUnit} from 'effector-react';
@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image';
 import {curatedPhotosStore} from '../stores';
 import {RouteParams} from '../Navigation';
 
-const deviceWidth = 375;
+const DEVICE_WIDTH = Dimensions.get('window').width;
 
 function DetailsScreen(): React.JSX.Element | null {
   // if we want to have swiping between different photo better to have info about all of them rather than passing data directly using route
@@ -33,8 +33,8 @@ function DetailsScreen(): React.JSX.Element | null {
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
           style={{
-            width: deviceWidth,
-            height: (item.height * deviceWidth) / item.width,
+            width: DEVICE_WIDTH,
+            height: (item.height * DEVICE_WIDTH) / item.width,
           }}
           source={{uri: item.src.original}}
           resizeMode={FastImage.resizeMode.contain}
